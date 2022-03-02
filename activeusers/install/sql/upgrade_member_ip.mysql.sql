@@ -1,0 +1,1 @@
+ALTER TABLE %%PREFIX%%connectedusers CHANGE COLUMN member_ip member_ip varchar(40);

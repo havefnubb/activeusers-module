@@ -1,0 +1,1 @@
+ALTER TABLE %%PREFIX%%connectedusers ALTER COLUMN member_ip TYPE character varying(40);
