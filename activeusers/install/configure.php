@@ -31,10 +31,12 @@ class activeusersModuleConfigurator extends \Jelix\Installer\Module\Configurator
                 $ep = $helpers->getEntryPointsById($epid);
                 $config = $ep->getConfigIni();
                 $config->setValue('activeusers', 1, 'coordplugins');
-                if ($config->getValue('timeout_visit', 'activeusers') === null) {
-                    $config->setValue('timeout_visit', 3600, 'activeusers');
-                }
             }
+        }
+
+        $config = $helpers->getConfigIni();
+        if ($config->getValue('timeout_visit', 'activeusers') === null) {
+            $config->setValue('timeout_visit', 3600, 'activeusers');
         }
 
         $helpers->copyFile('botsagent.ini.php', 'appconfig:botsagent.ini.php');
