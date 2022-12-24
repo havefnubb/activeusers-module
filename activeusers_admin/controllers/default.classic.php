@@ -25,7 +25,7 @@ class defaultCtrl extends jController {
         $form = jForms::get('config');
         if(!$form) {
             $form = jForms::create('config');
-            $activeusers = jClasses::create('activeusers~connectedusers');
+            $activeusers = new \Havefnubb\ActiveUsers\ConnectedUsers();
             $form->setData('timeout_visit', $activeusers->getVisitTimeout());
         }
 
@@ -47,7 +47,7 @@ class defaultCtrl extends jController {
         if (!$form->check()) {
             return $rep;
         }
-        $activeusers = jClasses::create('activeusers~connectedusers');
+        $activeusers = new \Havefnubb\ActiveUsers\ConnectedUsers();
 
         try {
             $activeusers->saveVisitTimeout($form->getData('timeout_visit'));

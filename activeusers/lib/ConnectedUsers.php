@@ -4,41 +4,42 @@
  * @subpackage havefnubb
  * @author    FoxMaSk
  * @contributor Laurent Jouanneau
- * @copyright 2008-2011 FoxMaSk, 2011-2019 Laurent Jouanneau
+ * @copyright 2008-2011 FoxMaSk, 2011-2022 Laurent Jouanneau
  * @link      https://havefnubb.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-
+namespace Havefnubb\ActiveUsers;
 use Jelix\IniFile\IniModifier;
 
 /**
 * Class that follows connections of a user
 */
-class connectedusers {
+class ConnectedUsers {
 
     /**
      * to call when a user log in
      * @param string $login
      */
-    public function connectUser($login) {
-        $dao = jDao::get('activeusers~connectedusers');
+    public function connectUser($login)
+    {
+        $dao = \jDao::get('activeusers~connectedusers');
         $name = $this->getName();
 
         $record = $dao->get(session_id());
         if ($record) {
             $record->login = $login; // perhaps the record exist, but with an anonymous user
             $record->name = $name;
-            $record->member_ip = jApp::coord()->request->getIP();
+            $record->member_ip = \jApp::coord()->request->getIP();
             $record->connection_date = $record->last_request_date = time();
             $record->disconnection_date = null;
             $dao->update($record);
         }
         else {
-            $record = jDao::createRecord('activeusers~connectedusers');
+            $record = \jDao::createRecord('activeusers~connectedusers');
             $record->sessionid = session_id();
             $record->login = $login;
             $record->name = $name;
-            $record->member_ip = jApp::coord()->request->getIP();
+            $record->member_ip = \jApp::coord()->request->getIP();
             $record->connection_date = $record->last_request_date = time();
             $record->disconnection_date = null;
             $dao->insert($record);
@@ -51,7 +52,7 @@ class connectedusers {
      * to call when a user logout
      */
     public function disconnectUser($login) {
-        $dao = jDao::get('activeusers~connectedusers');
+        $dao = \jDao::get('activeusers~connectedusers');
         $record = $dao->get(session_id());
         if ($record) {
             $record->disconnection_date = $record->last_request_date = time();
@@ -66,7 +67,7 @@ class connectedusers {
      * delete sessions that are too old
      */
     protected function deleteOldSessions() {
-        jDao::get('activeusers~connectedusers')->clear(time()- (5*24*60*60)); // 5 days
+        \jDao::get('activeusers~connectedusers')->clear(time()- (5*24*60*60)); // 5 days
     }
 
     /**
@@ -75,7 +76,7 @@ class connectedusers {
      * @return int  the unix timestamp of the timeout date.
      */
     public function getVisitTimeout() {
-        $timeoutVisit = jApp::config()->activeusers['timeout_visit'];
+        $timeoutVisit = \jApp::config()->activeusers['timeout_visit'];
         if (!$timeoutVisit) {
             $timeoutVisit = 1200;
         }
@@ -89,8 +90,8 @@ class connectedusers {
      */
     public function saveVisitTimeout($timeout)
     {
-        jApp::config()->activeusers['timeout_visit'] = $timeout;
-        $config = new IniModifier(jApp::varConfigPath('liveconfig.ini.php'));
+        \jApp::config()->activeusers['timeout_visit'] = $timeout;
+        $config = new IniModifier(\jApp::varConfigPath('liveconfig.ini.php'));
         $config->setValue('timeout_visit', $timeout, 'activeusers');
         $config->save();
         return true;
@@ -103,7 +104,7 @@ class connectedusers {
      * @param boolean true if he is connected
      */
     public function isConnected ($login) {
-        $dao = jDao::get('activeusers~connectedusers');
+        $dao = \jDao::get('activeusers~connectedusers');
         $timeoutVisit = $this->getVisitTimeout();
 
         $record = $dao->getIfConnected($login, $timeoutVisit);
@@ -118,7 +119,7 @@ class connectedusers {
      * Call it each time the user visit a page (connected or not)
      */
     public function check() {
-        $dao = jDao::get('activeusers~connectedusers');
+        $dao = \jDao::get('activeusers~connectedusers');
 
         $record = $dao->get(session_id());
         if ($record) {
@@ -126,11 +127,11 @@ class connectedusers {
             $dao->update($record);
         }
         else {
-            $record = jDao::createRecord('activeusers~connectedusers');
+            $record = \jDao::createRecord('activeusers~connectedusers');
             $record->sessionid = session_id();
 
-            if (jAuth::isConnected()) {
-                $user = jAuth::getUserSession();
+            if (\jAuth::isConnected()) {
+                $user = \jAuth::getUserSession();
                 $record->login = $user->login;
                 $record->name = $this->getName();
             }
@@ -138,7 +139,7 @@ class connectedusers {
                 $record->login = '';
                 $record->name = $this->getBots();
             }
-            $record->member_ip = jApp::coord()->request->getIP();
+            $record->member_ip = \jApp::coord()->request->getIP();
             $record->connection_date = $record->last_request_date = time();
             $dao->insert($record);
         }
@@ -151,7 +152,7 @@ class connectedusers {
     function getConnectedList($timeout = 0, $alsoDisconnectedUsers = false) {
         if ($timeout == 0)
             $timeout = $this->getVisitTimeout();
-        $dao = jDao::get('activeusers~connectedusers');
+        $dao = \jDao::get('activeusers~connectedusers');
         $members = $dao->findConnected($timeout);
         $list = array();
         $botlist = array();
@@ -193,7 +194,7 @@ class connectedusers {
     function getCount() {
         $timeout = $this->getVisitTimeout();
         if ($timeout) {
-            $cn = jDb::getConnection();
+            $cn = \jDb::getConnection();
             $sql =" SELECT COUNT(DISTINCT(login)) as cnt FROM ".$cn->prefixTable('connectedusers').'
                 WHERE last_request_date > '. $timeout. ' AND disconnection_date IS null';
             $rs = $cn->query($sql);
@@ -203,7 +204,7 @@ class connectedusers {
     }
 
     protected function getName() {
-        $user = jAuth::getUserSession();
+        $user = \jAuth::getUserSession();
         $name = '';
         if (isset($user->nickname))
             $name = $user->nickname;
@@ -224,7 +225,7 @@ class connectedusers {
             return null;
         $browser = $_SERVER['HTTP_USER_AGENT'];
         // read the list of bots
-        $botsList = Jelix\IniFile\Util::read(jApp::appSystemPath("botsagent.ini.php"));
+        $botsList = \Jelix\IniFile\Util::read(\jApp::appSystemPath("botsagent.ini.php"));
 
         if ($botsList) {
 

@@ -3,7 +3,7 @@
  * @package   havefnubb
  * @subpackage activeusers_admin
  * @author    Laurent Jouanneau
- * @copyright 2021 Laurent Jouanneau
+ * @copyright 2021-2022 Laurent Jouanneau
  * @link      https://havefnubb.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -22,7 +22,8 @@ class activeusers_dashboardZone extends jZone {
      */
     protected function _prepareTpl()
     {
-        $nbMembers = jClasses::create('activeusers~connectedusers')->getCount();
+        $activeusers = new \Havefnubb\ActiveUsers\ConnectedUsers();
+        $nbMembers = $activeusers->getCount();
         $this->_tpl->assign('usersCount', $nbMembers);
     }
 }

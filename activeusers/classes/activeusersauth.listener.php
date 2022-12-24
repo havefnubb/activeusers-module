@@ -4,7 +4,7 @@
  * @subpackage activeusers
  * @author    Laurent Jouanneau
  * @contributor 
- * @copyright 2010 Laurent Jouanneau
+ * @copyright 2010-2022 Laurent Jouanneau
  * @link      https://havefnubb.jelix.org
  * @license  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -19,7 +19,8 @@ class activeusersauthListener extends jEventListener{
     */
     function onAuthLogin ($event) {
         $login = $event->getParam('login');
-        jClasses::getService('activeusers~connectedusers')->connectUser($login);
+        $connectedUsers = new \Havefnubb\ActiveUsers\ConnectedUsers();
+        $connectedUsers->connectUser($login);
     }
 
     /**
@@ -28,11 +29,13 @@ class activeusersauthListener extends jEventListener{
     */
     function onAuthLogout($event) {
         $login = $event->getParam('login');
-        jClasses::getService('activeusers~connectedusers')->disconnectUser($login);
+        $connectedUsers = new \Havefnubb\ActiveUsers\ConnectedUsers();
+        $connectedUsers->disconnectUser($login);
     }
 
     function onAuthRemoveUser($event) {
         $login = $event->getParam('login');
-        jClasses::getService('activeusers~connectedusers')->disconnectUser($login);
+        $connectedUsers = new \Havefnubb\ActiveUsers\ConnectedUsers();
+        $connectedUsers->disconnectUser($login);
     }
 }

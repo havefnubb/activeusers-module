@@ -15,4 +15,7 @@
     <dependencies>
         <jelix minversion="1.7.0" maxversion="1.7.*"/>
     </dependencies>
+    <autoload>
+        <psr4 namespace="\Havefnubb\ActiveUsers" dir="lib"/>
+    </autoload>
 </module>

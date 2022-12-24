@@ -21,7 +21,8 @@ class online_todayZone extends jZone {
      */
     protected function _prepareTpl(){
         $today  = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
-        list($nbAnonymous, $members, $bots) = jClasses::getService('activeusers~connectedusers')->getConnectedList($today, true);
+        $connectedUsers = new \Havefnubb\ActiveUsers\ConnectedUsers();
+        list($nbAnonymous, $members, $bots) = $connectedUsers->getConnectedList($today, true);
 
         try {
             \jApp::getModulePath('jcommunity');
