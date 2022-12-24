@@ -4,7 +4,7 @@
 * @subpackage activeusers
 * @author     Laurent Jouanneau
 * @contributor
-* @copyright  2010 Laurent Jouanneau
+* @copyright  2010-2022 Laurent Jouanneau
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
@@ -18,8 +18,10 @@ class activeusersCoordPlugin implements jICoordPlugin {
         $this->config = $conf;
     }
 
-    public function beforeAction ($params){
-        jClasses::getService('activeusers~connectedusers')->check();
+    public function beforeAction ($params)
+    {
+        $connectedUsers = new \Havefnubb\ActiveUsers\ConnectedUsers();
+        $connectedUsers->check();
         return null;
     }
 
