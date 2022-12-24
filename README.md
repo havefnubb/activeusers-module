@@ -35,14 +35,3 @@ to activate the module:
 php install/installer.php
 ```
 
-You should attach url of activeusers_admin to the admin entrypoint of your
-application. Exemple, in your `app/system/urls.xml`:
-
-```xml
-<classicentrypoint name="admin" default="false" noentrypoint="false">
-    ...
-   <url pathinfo="/admin/activeusers" module="activeusers_admin" include="urls.xml"/>
-    ...
-</classicentrypoint>
-
-```

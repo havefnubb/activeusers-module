@@ -10,7 +10,7 @@
         <homepageURL>https://havefnubb.jelix.org/</homepageURL>
     </info>
     <dependencies>
-        <jelix minversion="1.7.0" maxversion="1.8.*"/>
+        <jelix minversion="1.8.0-pre" maxversion="1.8.*"/>
         <module name="jacl2db"/>
     </dependencies>
 </module>
